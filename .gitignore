@@ -1,0 +1,3 @@
+# Ignore everything, then selectively add files using 'git add --force'
+*
+*.*
