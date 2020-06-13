@@ -101,6 +101,9 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# SSH Legacy alias
+alias ssh-legacy="ssh -oKexAlgorithms=+diffie-hellman-group1-sha1"
+
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
