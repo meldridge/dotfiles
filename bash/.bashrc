@@ -8,6 +8,9 @@ case $- in
       *) return;;
 esac
 
+# Trim prompt after two cwd
+PROMPT_DIRTRIM=2
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
