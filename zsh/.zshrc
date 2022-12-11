@@ -33,3 +33,5 @@ alias g='egrep -i'
 # alias cp='cp -ip'
 # alias mv='mv -i'
 # alias rm='rm -i'
+#
+eval `keychain --eval --agents ssh id_rsa`
