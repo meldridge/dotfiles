@@ -1,7 +1,8 @@
 autoload -U colors && colors
 
 HISTFILE=~/.zsh-histfile
-SAVEHIST=10000
+SAVEHIST=1000
+HISTSIZE=1000
 NEWLINE=$'\n'
 PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
 
