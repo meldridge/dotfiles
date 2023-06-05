@@ -29,6 +29,7 @@ alias m=$PAGER
 alias ll='ls -laFo'
 alias l='ls -l'
 alias g='egrep -i'
+alias hist='history 1'
 
 # # be paranoid
 # alias cp='cp -ip'
