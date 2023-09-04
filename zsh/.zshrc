@@ -1,11 +1,12 @@
 autoload -U colors && colors
 
-HISTFILE=~/.zsh-histfile
-SAVEHIST=10000
+HISTFILE=~/.zsh_history
+SAVEHIST=1000
+HISTSIZE=1000
 NEWLINE=$'\n'
 PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
 
-setopt APPEND_HISTORY
+setopt share_history
 
 bindkey "^[[A" up-line-or-search
 bindkey "^[[F" end-of-line
@@ -28,6 +29,7 @@ alias m=$PAGER
 alias ll='ls -laFo'
 alias l='ls -l'
 alias g='egrep -i'
+alias hist='history 1'
 
 # # be paranoid
 # alias cp='cp -ip'
