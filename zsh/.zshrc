@@ -7,6 +7,7 @@ NEWLINE=$'\n'
 PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
 
 setopt share_history
+setopt hist_ignore_space
 
 bindkey "^[[A" up-line-or-search
 bindkey "^[[F" end-of-line
