@@ -20,7 +20,7 @@ bindkey "^[[3~" delete-char
 
 # Uncomment this and comment the above to enable the builtin vi(1) command
 # line editor in sh(1), e.g. ESC to go into visual mode.
-#set -o vi
+set -o vi
 
 
 # some useful aliases
@@ -46,8 +46,7 @@ alias vim='nvim'
 # alias rm='rm -i'
 
 # SSH Agent
-eval `keychain --eval --timeout 30` #--agents ssh id_rsa`
-#eval `ssh-agent -t 1800`
+eval `keychain --eval --timeout 30`
 
 # Add key fingerprint function
 function fingerprint() {   ssh-keygen -lf $1; }
