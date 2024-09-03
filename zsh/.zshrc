@@ -27,7 +27,7 @@ bindkey "^[[3~" delete-char
 alias h='fc -l'
 alias j=jobs
 alias m=$PAGER
-alias ll='ls -laFo'
+alias ll='ls -la'
 alias l='ls -l'
 alias g='egrep -i'
 alias hist='history 1'
@@ -37,14 +37,20 @@ alias ls='lsd'
 alias lst='lsd --tree'
 
 # Use Neovim
+alias vi='vim'
 alias vim='nvim'
 
 # # be paranoid
 # alias cp='cp -ip'
 # alias mv='mv -i'
 # alias rm='rm -i'
-#
-#eval `keychain --eval --agents ssh id_rsa`
+
+# SSH Agent
+eval `keychain --eval --timeout 30` #--agents ssh id_rsa`
+#eval `ssh-agent -t 1800`
+
+# Add key fingerprint function
+function fingerprint() {   ssh-keygen -lf $1; }
 
 # Install Ruby Gems to ~/.ruby/gems
 export GEM_HOME="$HOME/.gems"
