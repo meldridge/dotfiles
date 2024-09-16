@@ -16,11 +16,11 @@ bindkey "^[[3~" delete-char
 
 # Enable the builtin emacs(1) command line editor in sh(1),
 # e.g. C-a -> beginning-of-line.
-#set -o emacs
+set -o emacs
 
 # Uncomment this and comment the above to enable the builtin vi(1) command
 # line editor in sh(1), e.g. ESC to go into visual mode.
-set -o vi
+#set -o vi
 
 
 # some useful aliases
@@ -33,12 +33,12 @@ alias g='egrep -i'
 alias hist='history 1'
 
 # Use lsd
-alias ls='lsd'
-alias lst='lsd --tree'
+# alias ls='lsd'
+# alias lst='lsd --tree'
 
 # Use Neovim
-alias vi='vim'
-alias vim='nvim'
+# alias vi='vim'
+# alias vim='nvim'
 
 # # be paranoid
 # alias cp='cp -ip'
@@ -49,7 +49,7 @@ alias vim='nvim'
 eval `keychain --eval --timeout 30`
 
 # Add key fingerprint function
-function fingerprint() {   ssh-keygen -lf $1; }
+function fingerprint() { ssh-keygen -lf $1; }
 
 # Install Ruby Gems to ~/.ruby/gems
 export GEM_HOME="$HOME/.gems"
