@@ -22,7 +22,6 @@ set -o emacs
 # line editor in sh(1), e.g. ESC to go into visual mode.
 #set -o vi
 
-
 # some useful aliases
 alias h='fc -l'
 alias j=jobs
@@ -46,20 +45,16 @@ alias hist='history 1'
 # alias rm='rm -i'
 
 # SSH Agent
-eval `keychain --eval --timeout 30`
+eval $(keychain --eval --timeout 30)
 
 # Add key fingerprint function
 function fingerprint() { ssh-keygen -lf $1; }
 
-# Install Ruby Gems to ~/.ruby/gems
-export GEM_HOME="$HOME/.gems"
-export PATH="$HOME/.gems/bin:$PATH"
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-# Launch tmux
+# Launch tmux on login
+# NOTE: Remove middle condition if not in a graphical environment
 if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
 	exec tmux new-session -A -s ${USER} >/dev/null 2>&1
 fi
 
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
