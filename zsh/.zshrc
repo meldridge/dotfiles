@@ -1,28 +1,29 @@
+# Enable colors
 autoload -U colors && colors
 
+# History configuration
 HISTFILE=~/.zsh_history
-SAVEHIST=1000
-HISTSIZE=1000
+SAVEHIST=10000     # Increased from 1000 — because 1000 is *nothing*
+HISTSIZE=10000     # Same here
 NEWLINE=$'\n'
+
+# Prompt setup — nice multi-line, left it as-is
 PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
 
-setopt share_history
-setopt hist_ignore_space
+# History options
+setopt share_history           # Share history across terminals
+setopt inc_append_history      # NEW: Append to history file immediately, not on shell exit
+setopt hist_ignore_space       # Don't save commands starting with space
+setopt hist_reduce_blanks      # NEW: Strip out useless extra spaces in commands
 
+# Keybindings
 bindkey "^[[A" up-line-or-search
 bindkey "^[[F" end-of-line
 bindkey "^[[H" beginning-of-line
 bindkey "^[[3~" delete-char
+bindkey -e                     # NEW: Explicitly use emacs keybindings (Zsh-native)
 
-# Enable the builtin emacs(1) command line editor in sh(1),
-# e.g. C-a -> beginning-of-line.
-set -o emacs
-
-# Uncomment this and comment the above to enable the builtin vi(1) command
-# line editor in sh(1), e.g. ESC to go into visual mode.
-#set -o vi
-
-# some useful aliases
+# Useful aliases
 alias h='fc -l'
 alias j=jobs
 alias m=$PAGER
@@ -31,30 +32,34 @@ alias l='ls -l'
 alias g='egrep -i'
 alias hist='history 1'
 
-# Use lsd
+# Optional/disabled aliases
 # alias ls='lsd'
 # alias lst='lsd --tree'
-
-# Use Neovim
 # alias vi='vim'
 # alias vim='nvim'
-
-# # be paranoid
 # alias cp='cp -ip'
 # alias mv='mv -i'
 # alias rm='rm -i'
 
-# SSH Agent
-eval $(keychain --eval --timeout 30)
+# SSH Agent via keychain
+eval $(keychain --eval --timeout 30 --quiet)
 
 # Add key fingerprint function
-function fingerprint() { ssh-keygen -lf $1; }
+function fingerprint() {
+    ssh-keygen -lf "$1"
+}
 
-# Launch tmux on login
-# NOTE: Remove middle condition if not in a graphical environment
-if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
-	exec tmux new-session -A -s ${USER} >/dev/null 2>&1
+# Auto-start tmux on shell login if not already inside one
+if command -v tmux >/dev/null && [ -z "$TMUX" ]; then
+    exec tmux new-session -A -s "$USER"
 fi
 
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+# Optional editor export
+export EDITOR=vim  # Or 'nvim' if you're a hipster. Set to what you actually use.
+
+# Handy sudo-last-command alias
+alias please='sudo $(fc -ln -1)'
+
+# envman stub — left as-is, but you probably don’t need it
+# Commenting out until you remember what it does. Avoid dead weight.
+#[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
