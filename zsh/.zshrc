@@ -3,18 +3,18 @@ autoload -U colors && colors
 
 # History configuration
 HISTFILE=~/.zsh_history
-SAVEHIST=10000     # Increased from 1000 — because 1000 is *nothing*
-HISTSIZE=10000     # Same here
+SAVEHIST=10000
+HISTSIZE=10000
 NEWLINE=$'\n'
 
-# Prompt setup — nice multi-line, left it as-is
+# Prompt setup
 PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
 
 # History options
 setopt share_history           # Share history across terminals
-setopt inc_append_history      # NEW: Append to history file immediately, not on shell exit
+setopt inc_append_history      # Append to history file immediately, not on shell exit
 setopt hist_ignore_space       # Don't save commands starting with space
-setopt hist_reduce_blanks      # NEW: Strip out useless extra spaces in commands
+setopt hist_reduce_blanks      # Strip out useless extra spaces in commands
 
 # Keybindings
 bindkey "^[[A" up-line-or-search
@@ -55,11 +55,15 @@ if command -v tmux >/dev/null && [ -z "$TMUX" ]; then
 fi
 
 # Optional editor export
-export EDITOR=vim  # Or 'nvim' if you're a hipster. Set to what you actually use.
+export EDITOR=vim
 
 # Handy sudo-last-command alias
 alias please='sudo $(fc -ln -1)'
 
-# envman stub — left as-is, but you probably don’t need it
-# Commenting out until you remember what it does. Avoid dead weight.
-#[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+# envman stub for webi stuff
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+
+# nvm stuff
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
