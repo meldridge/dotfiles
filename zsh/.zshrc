@@ -84,6 +84,9 @@ export EDITOR=vim
 typeset -U path PATH
 path+=("$HOME/go/bin")
 
+# UV
+eval "$(uv generate-shell-completion zsh)"
+
 # Auto-start tmux on interactive login if not already inside a multiplexer.
 # Guards: interactive shell, real TTY, tmux installed, not nested in tmux/screen,
 # not VS Code's integrated terminal.
