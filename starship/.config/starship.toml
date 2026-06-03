@@ -1,0 +1,20 @@
+[username]
+show_always = true
+style_user = "red"
+style_root = "red"
+format = "[$user]($style)"
+
+[hostname]
+ssh_only = false
+style = "green"
+format = "[@$hostname]($style) "
+
+[directory]
+style = "yellow"
+format = "[\\[$path\\]]($style) "
+truncation_length = 0
+truncate_to_repo = false
+
+[character]
+success_symbol = "[\\$](green)"
+error_symbol = "[\\$](red)"

@@ -17,7 +17,8 @@ NEWLINE=$'\n'
 
 # Prompt setup
 setopt prompt_subst
-PROMPT="%F{red}%n%F{green}@%m%F{yellow}[%40<...<%~%<<]%f${NEWLINE}$ "
+# PROMPT="%F{red}%n%F{green}@%m%F{yellow}[%40<...<%~%<<]%f${NEWLINE}$ "   # pre-starship fallback
+eval "$(starship init zsh)"
 # RPROMPT='$(container)'$RPROMPT   # uncomment alongside container() above
 
 # History options
@@ -65,6 +66,11 @@ alias clippaste="xclip -o -selection clipboard"
 
 # SSH Agent via keychain
 command -v keychain >/dev/null && eval "$(keychain --eval --timeout 30 --quiet)"
+
+# SSH SK Helper (FIDO2 security keys via Windows OpenSSH, WSL only)
+if [[ -n "$WSL_DISTRO_NAME" ]] && [[ -x "/mnt/c/Windows/System32/OpenSSH/ssh-sk-helper.exe" ]]; then
+    export SSH_SK_HELPER="/mnt/c/Windows/System32/OpenSSH/ssh-sk-helper.exe"
+fi
 
 # Optional editor export
 export EDITOR=vim
