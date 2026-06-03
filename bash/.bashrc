@@ -136,4 +136,5 @@ if ! shopt -oq posix; then
 fi
 . "$HOME/.cargo/env"
 
-eval `keychain --eval --agents ssh id_rsa`
+# SSH Agent via keychain
+command -v keychain >/dev/null && eval "$(keychain --eval --timeout 30 --quiet)"

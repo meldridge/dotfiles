@@ -1,2 +1,2 @@
 # config
-Linux configuration files (Bash, Vim, etc)
+Linux dotfiles (zsh, bash, tmux).

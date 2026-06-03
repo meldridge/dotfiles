@@ -1,38 +1,40 @@
-# Enable colors
-autoload -U colors && colors
-
 # History configuration
 HISTFILE=~/.zsh_history
-SAVEHIST=10000
-HISTSIZE=10000
+HISTSIZE=50000   # in-memory size; keep larger than SAVEHIST
+SAVEHIST=10000   # persisted to $HISTFILE
 NEWLINE=$'\n'
 
-# Shows "⬢ <name>" when inside a distrobox/container
-container() {
-  # Distrobox: if CONTAINER_ID is set, we're in a distrobox
-  [[ -n "${CONTAINER_ID-}" ]] || return 0
-
-  local name=""
-  if [[ -r /run/.containerenv ]]; then
-    # podman-style file often contains: name="something"
-    name="${${(M)${(f)"$(</run/.containerenv)"}:#name=*}#name=}"
-    name="${name//\"/}"
-  fi
-
-  [[ -n "$name" ]] || name="$CONTAINER_ID"
-  print -n "%F{magenta}⬢ ${name}%f "
-}
+# Shows "⬢ <name>" when inside a container (distrobox / podman / toolbox / docker).
+# Disabled by default. To enable: uncomment the function below AND the
+# matching RPROMPT line in the "Prompt setup" block.
+# container() {
+#   [[ -n "${CONTAINER_ID-}" || -r /run/.containerenv || -f /.dockerenv ]] || return 0
+#   local name
+#   name=$(awk -F'"' '/^name=/ {print $2; exit}' /run/.containerenv 2>/dev/null)
+#   [[ -n "$name" ]] || name="${CONTAINER_ID:-container}"
+#   print -n "%F{magenta}⬢ ${name}%f "
+# }
 
 # Prompt setup
 setopt prompt_subst
-PROMPT="%{$fg[red]%}%n%{$fg[green]%}@%m%{$fg[yellow]%}[%40<...<%~%<<]%{$reset_color%}${NEWLINE}$ "
-RPROMPT='$(container)'$RPROMPT
+PROMPT="%F{red}%n%F{green}@%m%F{yellow}[%40<...<%~%<<]%f${NEWLINE}$ "
+# RPROMPT='$(container)'$RPROMPT   # uncomment alongside container() above
 
 # History options
-setopt share_history           # Share history across terminals
-setopt inc_append_history      # Append to history file immediately, not on shell exit
-setopt hist_ignore_space       # Don't save commands starting with space
-setopt hist_reduce_blanks      # Strip out useless extra spaces in commands
+setopt share_history           # share history across terminals (implies inc_append_history)
+setopt hist_ignore_space       # don't save commands starting with space
+setopt hist_reduce_blanks      # collapse runs of whitespace inside commands
+setopt extended_history        # record timestamp and duration for each entry
+setopt hist_ignore_all_dups    # remove older duplicates when a command repeats
+setopt hist_find_no_dups       # don't show duplicates when searching history
+setopt hist_verify             # show !!/!$ expansion before running it
+setopt hist_expire_dups_first  # prune dups first when SAVEHIST is hit
+
+# Completion system
+autoload -Uz compinit
+compinit -C
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
 # Keybindings
 bindkey -e                     # NEW: Explicitly use emacs keybindings (Zsh-native)
@@ -44,12 +46,9 @@ bindkey -e                     # NEW: Explicitly use emacs keybindings (Zsh-nati
 
 # Useful aliases
 alias h='fc -l'
-alias j=jobs
-alias m=$PAGER
 alias ll='ls -la'
 alias l='ls -l'
-alias g='egrep -i'
-alias hist='history 1'
+alias g='git'
 
 # Optional/disabled aliases
 # alias ls='lsd'
@@ -67,29 +66,23 @@ alias clippaste="xclip -o -selection clipboard"
 # SSH Agent via keychain
 command -v keychain >/dev/null && eval "$(keychain --eval --timeout 30 --quiet)"
 
-# Add key fingerprint function
-function fingerprint() {
-    ssh-keygen -lf "$1"
-}
-
-# Auto-start tmux on shell login if not already inside one
-if command -v tmux >/dev/null && [ -z "$TMUX" ]; then
-    exec tmux new-session -A -s "$USER"
-fi
-
 # Optional editor export
 export EDITOR=vim
 
-# Handy sudo-last-command alias
-alias please='sudo $(fc -ln -1)'
-
-# envman stub for webi stuff
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
-# nvm stuff
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# Node Version Manager stuff
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # Go bins
-export PATH=$PATH:$HOME/go/bin
+typeset -U path PATH
+path+=("$HOME/go/bin")
+
+# Auto-start tmux on interactive login if not already inside a multiplexer.
+# Guards: interactive shell, real TTY, tmux installed, not nested in tmux/screen,
+# not VS Code's integrated terminal.
+if [[ $- == *i* ]] && [[ -t 1 ]] \
+    && command -v tmux >/dev/null \
+    && [[ -z "$TMUX" && -z "$STY" && "$TERM_PROGRAM" != "vscode" ]]; then
+    exec tmux new-session -A -s "$USER"
+fi
