@@ -45,6 +45,13 @@ bindkey -e                     # NEW: Explicitly use emacs keybindings (Zsh-nati
 [[ -n ${terminfo[kLFT5]} ]] && bindkey "${terminfo[kLFT5]}" backward-word
 [[ -n ${terminfo[kRIT5]} ]] && bindkey "${terminfo[kRIT5]}" forward-word
 
+# fzf — fuzzy finder. Completion (**<TAB>) + keybindings (Ctrl-R history,
+# Ctrl-T file picker, Alt-C cd). Sourced after compinit and the keybindings
+# block so fzf's bindings win. Debian ships these under examples/.
+export FZF_TMUX=1   # inside tmux, open the finder in a split pane; remove to draw in-pane
+[[ -f /usr/share/doc/fzf/examples/completion.zsh ]]   && source /usr/share/doc/fzf/examples/completion.zsh
+[[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+
 # Useful aliases
 alias h='fc -l'
 alias ll='ls -la'
@@ -78,14 +85,15 @@ export EDITOR=vim
 # Node Version Manager stuff
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# Go bins
+# Go bins + ~/.local/bin (uv, pipx, etc.) on PATH
 typeset -U path PATH
 path+=("$HOME/go/bin")
+source "$HOME/.local/bin/env"
 
-# UV
-eval "$(uv generate-shell-completion zsh)"
+# UV completions
+command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 
 # Auto-start tmux on interactive login if not already inside a multiplexer.
 # Guards: interactive shell, real TTY, tmux installed, not nested in tmux/screen,
