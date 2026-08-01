@@ -67,9 +67,9 @@ alias g='git'
 # alias mv='mv -i'
 # alias rm='rm -i'
 
-# xclip aliases
-alias clipcopy="xclip -selection clipboard"
-alias clippaste="xclip -o -selection clipboard"
+# Clipboard aliases (wayland)
+alias clipcopy="wl-copy"
+alias clippaste="wl-paste"
 
 # SSH Agent via keychain
 command -v keychain >/dev/null && eval "$(keychain --eval --timeout 30 --quiet)"
@@ -79,8 +79,15 @@ if [[ -n "$WSL_DISTRO_NAME" ]] && [[ -x "/mnt/c/Windows/System32/OpenSSH/ssh-sk-
     export SSH_SK_HELPER="/mnt/c/Windows/System32/OpenSSH/ssh-sk-helper.exe"
 fi
 
-# Optional editor export
-export EDITOR=vim
+# Editor: first available, in order of preference.
+for _ed in nvim vim vi; do
+    if command -v "$_ed" >/dev/null 2>&1; then
+        export EDITOR="$_ed"
+        export VISUAL="$_ed"
+        break
+    fi
+done
+unset _ed
 
 # Node Version Manager stuff
 # export NVM_DIR="$HOME/.nvm"
@@ -89,8 +96,9 @@ export EDITOR=vim
 
 # Go bins + ~/.local/bin (uv, pipx, etc.) on PATH
 typeset -U path PATH
+path+=("$HOME/.local/bin")
 path+=("$HOME/go/bin")
-source "$HOME/.local/bin/env"
+#source "$HOME/.local/bin/env"
 
 # UV completions
 command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
@@ -98,8 +106,8 @@ command -v uv >/dev/null && eval "$(uv generate-shell-completion zsh)"
 # Auto-start tmux on interactive login if not already inside a multiplexer.
 # Guards: interactive shell, real TTY, tmux installed, not nested in tmux/screen,
 # not VS Code's integrated terminal.
-if [[ $- == *i* ]] && [[ -t 1 ]] \
-    && command -v tmux >/dev/null \
-    && [[ -z "$TMUX" && -z "$STY" && "$TERM_PROGRAM" != "vscode" ]]; then
-    exec tmux new-session -A -s "$USER"
-fi
+# if [[ $- == *i* ]] && [[ -t 1 ]] \
+#     && command -v tmux >/dev/null \
+#     && [[ -z "$TMUX" && -z "$STY" && "$TERM_PROGRAM" != "vscode" ]]; then
+#     exec tmux new-session -A -s "$USER"
+# fi
