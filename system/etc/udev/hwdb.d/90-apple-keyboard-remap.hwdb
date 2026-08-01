@@ -1,0 +1,16 @@
+# Apple keyboards: Command->Ctrl, Ctrl->Alt, Option->Super, both sides.
+# Covers the MacBookPro11,5 internal keyboard (05ac:0274) and the wired A1243.
+# 700e4 is right Control, which only full-size boards have; inert on the MBP.
+#
+# TRAP: 700e4 maps to rightalt to keep the sides distinguishable, but xkb binds
+# rightalt as AltGr (ISO_Level3_Shift) on us-intl and with lv3:ralt_switch. On a
+# plain us layout it is Alt_R and behaves correctly. If you ever change layout
+# and the A1243's right Control starts emitting accented characters instead of
+# acting as Alt, this line is why - change it to leftalt.
+evdev:input:b0003v05AC*
+ KEYBOARD_KEY_700e0=leftalt
+ KEYBOARD_KEY_700e2=leftmeta
+ KEYBOARD_KEY_700e3=leftctrl
+ KEYBOARD_KEY_700e4=rightalt
+ KEYBOARD_KEY_700e6=rightmeta
+ KEYBOARD_KEY_700e7=rightctrl
